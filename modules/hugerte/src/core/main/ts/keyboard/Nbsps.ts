@@ -197,9 +197,32 @@ const normalizeNbspsInEditor = (editor: Editor): void => {
   const root = SugarElement.fromDom(editor.getBody());
 
   if (editor.selection.isCollapsed()) {
-    normalizeNbsps(root, CaretPosition.fromRangeStart(editor.selection.getRng()), editor.schema).each((pos) => {
-      editor.selection.setRng(pos.toRange());
+    const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+    normalizeNbsps(root, pos, editor.schema).each((normalizedPos) => {
+      editor.selection.setRng(normalizedPos.toRange());
     });
+
+    const container = pos.container();
+    if (NodeType.isText(container) && container.length > 0) {
+      const block = getClosestBlock(root, pos, editor.schema);
+      // Input can make a neighbouring nbsp collapsible even when it is in a separate inline element.
+      if (isContent(container.data.charAt(0))) {
+        CaretFinder.prevPosition(block.dom, CaretPosition(container, 0)).each((prev) => {
+          const node = prev.container();
+          if (NodeType.isText(node)) {
+            normalizeNbspAtEnd(root, node, false, editor.schema);
+          }
+        });
+      }
+      if (isContent(container.data.charAt(container.length - 1))) {
+        CaretFinder.nextPosition(block.dom, CaretPosition(container, container.length)).each((next) => {
+          const node = next.container();
+          if (NodeType.isText(node)) {
+            normalizeNbspAtStart(root, node, false, editor.schema);
+          }
+        });
+      }
+    }
   }
 };
 

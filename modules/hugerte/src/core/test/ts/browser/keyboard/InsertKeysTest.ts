@@ -153,6 +153,40 @@ describe('browser.hugerte.core.keyboard.InsertKeysTest', () => {
     });
 
     context('Nbsp at fragmented text', () => {
+      Arr.each([
+        { title: 'after a visual character', html: '<p>word<span data-mce-bogus="1" class="mce-nbsp">&nbsp;</span>w</p>', expected: '<p>word w</p>', path: [ 0, 2 ] },
+        { title: 'after formatted text', html: '<p><em>word&nbsp;</em>w</p>', expected: '<p><em>word </em>w</p>', path: [ 0, 1 ] },
+        { title: 'before formatted text', html: '<p>w<em>&nbsp;word</em></p>', expected: '<p>w<em> word</em></p>', path: [ 0, 0 ] },
+        { title: 'after a leading space', html: '<p><em>&nbsp;</em>w</p>', expected: '<p><em>&nbsp;</em>w</p>', path: [ 0, 1 ] },
+        { title: 'before a trailing space', html: '<p>w<em>&nbsp;</em></p>', expected: '<p>w<em>&nbsp;</em></p>', path: [ 0, 0 ] },
+        { title: 'after consecutive spaces', html: '<p>word <em>&nbsp;</em>w</p>', expected: '<p>word <em>&nbsp;</em>w</p>', path: [ 0, 2 ] },
+        { title: 'before consecutive spaces', html: '<p>w<em>&nbsp;</em> word</p>', expected: '<p>w<em>&nbsp;</em> word</p>', path: [ 0, 0 ] },
+        { title: 'after a line break', html: '<p>word<br><em>&nbsp;</em>w</p>', expected: '<p>word<br><em>&nbsp;</em>w</p>', path: [ 0, 3 ] },
+        { title: 'before a line break', html: '<p>w<em>&nbsp;</em><br>word</p>', expected: '<p>w<em>&nbsp;</em><br>word</p>', path: [ 0, 0 ] },
+        { title: 'after a block', html: '<p>word&nbsp;</p><p>w</p>', expected: '<p>word&nbsp;</p><p>w</p>', path: [ 1, 0 ] },
+        { title: 'before a block', html: '<p>w</p><p>&nbsp;word</p>', expected: '<p>w</p><p>&nbsp;word</p>', path: [ 0, 0 ] },
+        { title: 'after noneditable text', html: '<p><span contenteditable="false">word&nbsp;</span>w</p>', expected: '<p><span contenteditable="false">word&nbsp;</span>w</p>', path: [ 0, 1 ] }
+      ], ({ title, html, expected, path }) => {
+        it('Normalize adjacent nbsp when inserting ' + title, () => {
+          const editor = hook.editor();
+          // Preserve the runtime DOM, including visualchars wrappers that setContent would strip.
+          editor.getBody().innerHTML = html;
+          TinySelections.setCursor(editor, path, 1);
+          fireInsert(editor);
+          TinyAssertions.assertContent(editor, expected);
+          TinyAssertions.assertSelection(editor, path, 1, path, 1);
+        });
+      });
+
+      it('Do not normalize adjacent nbsp during composition', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><em>word&nbsp;</em>w</p>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        editor.dispatch('input', { isComposing: true } as InputEvent);
+        TinyAssertions.assertContent(editor, '<p><em>word&nbsp;</em>w</p>');
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      });
+
       it('Insert nbsp at end of text block with leading empty text nodes should retain the nbsp', () => {
         const editor = hook.editor();
         editor.setContent('<p>&nbsp;a</p>');
