@@ -128,7 +128,7 @@ describe('browser.hugerte.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addSplitButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"]';
+        const buttonSelector = 'div[data-mce-name="split-button"] .tox-split-button__main';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
       });

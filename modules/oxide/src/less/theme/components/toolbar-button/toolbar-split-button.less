@@ -17,7 +17,7 @@
     box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset;
   }
 
-  .tox-split-button:focus {
+  .tox-split-button:focus-within {
     background: @toolbar-button-focus-background-color;
     box-shadow: @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
@@ -32,8 +32,8 @@
   .tox-split-button > * {
     border-radius: 0;
 
-    // Cannot use first and last child selectors because of a hidden element
-    // used for screen reader accessibility
+    // The first child is the primary action button and the last child is the
+    // chevron/dropdown button, so round the outer corners to make them look joined.
     &:nth-child(1) {
       border-bottom-left-radius: @toolbar-button-border-radius;
       border-top-left-radius: @toolbar-button-border-radius;
@@ -57,10 +57,10 @@
     margin: 0;
   }
 
-  .tox-split-button.tox-tbtn--disabled:hover,
-  .tox-split-button.tox-tbtn--disabled:focus,
-  .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
-  .tox-split-button.tox-tbtn--disabled .tox-tbtn:focus {
+  .tox-split-button__main.tox-tbtn--disabled:hover,
+  .tox-split-button__main.tox-tbtn--disabled:focus,
+  .tox-split-button__chevron.tox-tbtn--disabled:hover,
+  .tox-split-button__chevron.tox-tbtn--disabled:focus {
     background: @toolbar-button-disabled-background-color;
     box-shadow: @toolbar-button-disabled-box-shadow;
     color: @toolbar-button-disabled-text-color;
@@ -81,8 +81,8 @@
     }
   }
 
-  .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
-  .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
+  .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-text-color__color,
+  .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
     opacity: @toolbar-split-color-preview-opacity;
   }
 }

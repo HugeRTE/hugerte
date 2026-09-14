@@ -77,8 +77,8 @@ describe('browser.hugerte.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
       const button = UiFinder.findIn(SugarBody.body(), `div.tox-split-button[aria-label="${name}"]`).getOrDie();
       return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
         children: [
-          s.element('span', {
-            exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
+          s.element('button', {
+            exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
           }),
           s.theRest()
         ]
@@ -320,8 +320,8 @@ describe('browser.hugerte.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
         const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog .tox-split-button[aria-label="${name}"]`).getOrDie();
         return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
           children: [
-            s.element('span', {
-              exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
+            s.element('button', {
+              exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
             }),
             s.theRest()
           ]

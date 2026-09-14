@@ -229,8 +229,8 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
                               s.element('div', {
                                 classes: [ arr.has('tox-split-button') ],
                                 children: [
-                                  s.element('span', {
-                                    classes: [ arr.has('tox-tbtn') ],
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
                                     children: [
                                       s.element('span', {
                                         classes: [ arr.has('tox-tbtn__select-label') ],
@@ -238,19 +238,10 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
                                       })
                                     ]
                                   }),
-                                  s.element('span', {
+                                  s.element('button', {
                                     classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                     children: [
                                       s.element('svg', {})
-                                    ]
-                                  }),
-                                  s.element('span', {
-                                    attrs: {
-                                      'aria-hidden': str.is('true'),
-                                      style: str.is('display: none;')
-                                    },
-                                    children: [
-                                      s.text(str.is('To open the popup, press Shift+Enter'))
                                     ]
                                   })
                                 ]
@@ -260,8 +251,8 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
                               s.element('div', {
                                 classes: [ arr.has('tox-split-button') ],
                                 children: [
-                                  s.element('span', {
-                                    classes: [ arr.has('tox-tbtn') ],
+                                  s.element('button', {
+                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
                                     children: [
                                       s.element('span', {
                                         children: [
@@ -270,19 +261,10 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
                                       })
                                     ]
                                   }),
-                                  s.element('span', {
+                                  s.element('button', {
                                     classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                     children: [
                                       s.element('svg', {})
-                                    ]
-                                  }),
-                                  s.element('span', {
-                                    attrs: {
-                                      'aria-hidden': str.is('true'),
-                                      style: str.is('display: none;')
-                                    },
-                                    children: [
-                                      s.text(str.is('To open the popup, press Shift+Enter'))
                                     ]
                                   })
                                 ]
@@ -398,10 +380,10 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
 
   it('TBA: Clicking on a split button primary part should not toggle. It is up to the setActive api to do that', () => {
     const editor = hook.editor();
-    TinyUiActions.clickOnToolbar(editor, '.tox-split-button:contains("Delta")');
+    TinyUiActions.clickOnToolbar(editor, '.tox-split-button__main:contains("Delta")');
     const button = UiFinder.findIn(TinyDom.container(editor), '.tox-split-button > .tox-tbtn:contains("Delta")').getOrDie();
     Assertions.assertStructure('Delta button should not be pressed',
-      ApproxStructure.build((s, str, arr) => s.element('span', {
+      ApproxStructure.build((s, _str, arr) => s.element('button', {
         classes: [ arr.not('tox-tbtn--enabled') ]
       })),
       button
@@ -413,7 +395,7 @@ describe('browser.hugerte.themes.silver.editor.SilverEditorTest', () => {
     editor.dispatch('splitbutton1-toggle');
     const button = UiFinder.findIn(TinyDom.container(editor), '.tox-split-button > .tox-tbtn:contains("Delta")').getOrDie();
     Assertions.assertStructure('Delta button should be pressed',
-      ApproxStructure.build((s, str, arr) => s.element('span', {
+      ApproxStructure.build((s, _str, arr) => s.element('button', {
         classes: [ arr.has('tox-tbtn--enabled') ]
       })),
       button
