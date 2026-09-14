@@ -10,8 +10,8 @@ import * as ColorSwatch from 'hugerte/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.hugerte.themes.silver.editor.color.ColorPickerSanityTest', () => {
   const selectors = {
-    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorToolbar: '[data-mce-name="backcolor-chevron"]',
+    forecolorToolbar: '[data-mce-name="forecolor-chevron"]'
   };
 
   Arr.each([

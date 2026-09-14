@@ -22,8 +22,8 @@ describe('browser.hugerte.themes.silver.editor.color.ColorAriaLabelTest', () => 
   ];
 
   const selectors = {
-    backcolorSplitButton: (color: string = '') => Strings.isEmpty(color) ? `[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron` : `[aria-label^="Background color ${color}"] > .tox-tbtn + .tox-split-button__chevron`,
-    forecolorSplitButton: (color: string = '') => Strings.isEmpty(color) ? `[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron` : `[aria-label^="Text color ${color}"] > .tox-tbtn + .tox-split-button__chevron`,
+    backcolorSplitButton: (color: string = '') => Strings.isEmpty(color) ? `[data-mce-name="backcolor-chevron"]` : `[data-mce-name="backcolor-chevron"][aria-label^="Background color ${color}"]`,
+    forecolorSplitButton: (color: string = '') => Strings.isEmpty(color) ? `[data-mce-name="forecolor-chevron"]` : `[data-mce-name="forecolor-chevron"][aria-label^="Text color ${color}"]`,
     backcolorMenuItem: (color: string = '') => Strings.isEmpty(color) ? `[role="menu"] div[aria-label^="Background color"]` : `[role="menu"] div[aria-label^="Background color ${color}"]`,
     forecolorMenuItem: (color: string = '') => Strings.isEmpty(color) ? `[role="menu"] div[aria-label^="Text color"]` : `[role="menu"] div[aria-label^="Text color ${color}"]`,
     forecolorMenu: 'button:contains("forecolor")',

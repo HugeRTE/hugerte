@@ -26,7 +26,7 @@ export interface RenderToolbarConfig {
   readonly allowToolbarGroups: boolean;
 }
 
-type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => AlloySpec;
+type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => AlloySpec | AlloySpec[];
 
 const defaultToolbar = [
   {
@@ -103,16 +103,17 @@ const types: Record<string, BridgeRenderFn<any>> = {
   )
 };
 
-const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor, btnName: string): Optional<AlloySpec> =>
+const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor, btnName: string): Optional<AlloySpec[]> =>
   Obj.get(types, spec.type).fold(
     () => {
       // eslint-disable-next-line no-console
       console.error('skipping button defined by', spec);
       return Optional.none();
     },
-    (render) => Optional.some(
-      render(spec, backstage, editor, btnName)
-    )
+    (render) => {
+      const result = render(spec, backstage, editor, btnName);
+      return Optional.some(Array.isArray(result) ? result : [ result ]);
+    }
   );
 
 const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackstage) => AlloySpec> = {
@@ -169,11 +170,11 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupOption[]
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec> =>
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec[]> =>
   Obj.get(buttons, toolbarItem.toLowerCase())
     .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
     .fold(
-      () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, backstage)),
+      () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => [ r(editor, backstage) ]),
       // TODO: Add back after TINY-3232 is implemented
       // .orThunk(() => {
       //   console.error('No representation for toolbarItem: ' + toolbarItem);
@@ -196,7 +197,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
       return toolbarItem.trim().length === 0 ? [] :
-        lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes).toArray();
+        lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes).getOr([]);
     });
     return {
       title: Optional.from(editor.translate(group.name)),

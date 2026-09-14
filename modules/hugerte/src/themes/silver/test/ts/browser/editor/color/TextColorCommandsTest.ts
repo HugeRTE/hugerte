@@ -7,8 +7,8 @@ import Editor from 'hugerte/core/api/Editor';
 
 describe('browser.hugerte.themes.silver.editor.color.TextColorCommandsTest', () => {
   const selectors = {
-    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorSplitButton: '[data-mce-name="backcolor-chevron"]',
+    forecolorSplitButton: '[data-mce-name="forecolor-chevron"]'
   };
 
   const state = Cell<string | null>(null);

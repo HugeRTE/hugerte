@@ -4,6 +4,8 @@ export const enum ToolbarButtonClasses {
   Icon = 'tox-icon',
   Ticked = 'tox-tbtn--enabled',
   SplitButton = 'tox-split-button',
+  SplitButtonMain = 'tox-split-button__main',
+  SplitButtonChevron = 'tox-split-button__chevron',
   MatchWidth = 'tox-tbtn--select'
 }
 

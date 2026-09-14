@@ -6,73 +6,54 @@
 @toolbar-split-color-preview-opacity: .6;
 
 .tox {
-  .tox-split-button {
-    border: 0;
-    box-sizing: border-box;
-    display: flex;
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
-  }
+  // Split button main component (left side)
+  .tox-split-button__main {
+    border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    margin-right: 0;
 
-  .tox-split-button:hover {
-    box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset;
-  }
+    &:focus {
+      background: @toolbar-button-focus-background-color;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
 
-  .tox-split-button:focus {
-    background: @toolbar-button-focus-background-color;
-    box-shadow: @toolbar-button-focus-box-shadow;
-    color: @toolbar-button-focus-text-color;
-    position: relative;
-    z-index: 1; // Ensure focus outline is on top of other buttons
+      &::after {
+        .keyboard-focus-outline-mixin();
 
-    &::after {
-      .keyboard-focus-outline-mixin();
+        border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+      }
     }
   }
 
-  .tox-split-button > * {
-    border-radius: 0;
-
-    // Cannot use first and last child selectors because of a hidden element
-    // used for screen reader accessibility
-    &:nth-child(1) {
-      border-bottom-left-radius: @toolbar-button-border-radius;
-      border-top-left-radius: @toolbar-button-border-radius;
-    }
-
-    &:nth-child(2) {
-      border-bottom-right-radius: @toolbar-button-border-radius;
-      border-top-right-radius: @toolbar-button-border-radius;
-    }
-  }
-
+  // Split button chevron component (right side)
   .tox-split-button__chevron {
+    border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    margin-left: 0;
     width: @toolbar-button-chevron-width;
-  }
 
-  .tox-split-button__chevron svg {
-    fill: @toolbar-button-chevron-color;
-  }
+    &:focus {
+      background: @toolbar-button-focus-background-color;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
 
-  .tox-split-button .tox-tbtn {
-    margin: 0;
-  }
+      &::after {
+        .keyboard-focus-outline-mixin();
 
-  .tox-split-button.tox-tbtn--disabled:hover,
-  .tox-split-button.tox-tbtn--disabled:focus,
-  .tox-split-button.tox-tbtn--disabled .tox-tbtn:hover,
-  .tox-split-button.tox-tbtn--disabled .tox-tbtn:focus {
-    background: @toolbar-button-disabled-background-color;
-    box-shadow: @toolbar-button-disabled-box-shadow;
-    color: @toolbar-button-disabled-text-color;
+        border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+      }
+    }
+
+    svg {
+      fill: @toolbar-button-chevron-color;
+    }
   }
 
   // Increase the chevron size and decrease the button size on touch devices
   &.tox-platform-touch {
-    .tox-split-button .tox-tbtn--select {
-      padding: 0 (@toolbar-button-select-padding - @toolbar-split-button-chevron-touch-padding);
-    }
-
-    .tox-split-button .tox-tbtn:not(.tox-tbtn--select):first-child {
+    .tox-split-button__main {
       width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
     }
 
@@ -81,8 +62,53 @@
     }
   }
 
-  .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
-  .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
+  // Disabled states for split button components
+  .tox-split-button__main.tox-tbtn--disabled,
+  .tox-split-button__chevron.tox-tbtn--disabled {
+    background: @toolbar-button-disabled-background-color;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+
+    &:hover {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
+
+    &:focus {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
+  }
+
+  .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-text-color__color,
+  .tox-split-button__main.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
     opacity: @toolbar-split-color-preview-opacity;
+  }
+}
+
+// RTL
+// In RTL the chevron is painted to the left of the main button, so the seam must be flush on
+// the chevron's right instead of its left, and the outer radii need mirroring. Keep this as an
+// explicit `[dir=rtl]` override so the LTR output stays byte-for-byte identical.
+.tox[dir=rtl] {
+  .tox-split-button__main {
+    border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    margin-left: 0;
+    margin-right: @toolbar-button-spacing-x;
+
+    &:focus::after {
+      border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    }
+  }
+
+  .tox-split-button__chevron {
+    border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    margin-right: 0;
+
+    &:focus::after {
+      border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    }
   }
 }

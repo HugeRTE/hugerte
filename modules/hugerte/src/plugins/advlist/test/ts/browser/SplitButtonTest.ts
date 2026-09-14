@@ -16,8 +16,8 @@ describe('browser.hugerte.plugins.advlist.SplitButtonTest', () => {
     base_url: '/project/hugerte/js/hugerte'
   }, [ AdvListPlugin, ListsPlugin ]);
 
-  const pClickOnSplitBtnFor = async (editor: Editor, label: string) => {
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron');
+  const pClickOnSplitBtnFor = async (editor: Editor, name: string) => {
+    TinyUiActions.clickOnToolbar(editor, `[data-mce-name="${name}-chevron"]`);
     await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
   };
 
@@ -220,14 +220,14 @@ describe('browser.hugerte.plugins.advlist.SplitButtonTest', () => {
 
   it('Check numbered list toolbar button structure', async () => {
     const editor = hook.editor();
-    await pClickOnSplitBtnFor(editor, 'Numbered list');
+    await pClickOnSplitBtnFor(editor, 'numlist');
     assertNumListStructure();
     TinyUiActions.keyup(editor, Keys.escape());
   });
 
   it('Check bullet list toolbar button structure', async () => {
     const editor = hook.editor();
-    await pClickOnSplitBtnFor(editor, 'Bullet list');
+    await pClickOnSplitBtnFor(editor, 'bullist');
     assertBullListStructure();
     TinyUiActions.keyup(editor, Keys.escape());
   });

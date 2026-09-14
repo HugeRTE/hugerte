@@ -132,7 +132,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
             label: 'Open splitmenu item, color palette',
-            selector: 'div[data-mce-name="forecolor"][aria-expanded=false]'
+            selector: '[data-mce-name="forecolor-chevron"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop);
       });

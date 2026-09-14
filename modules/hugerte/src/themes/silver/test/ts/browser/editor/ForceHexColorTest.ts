@@ -21,7 +21,7 @@ describe('browser.hugerte.themes.silver.editor.ForceHexColorTest', () => {
       /** Apply color using the 'forecolor' part of the toolbar. */
       usingToolbar: async () => {
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 'color me'.length + 1);
-        TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+        TinyUiActions.clickOnToolbar(editor, '[data-mce-name="forecolor-chevron"]');
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, `div[data-mce-color="${appliedColor}"]`);
         TinyAssertions.assertContentPresence(editor, { [`span[data-mce-style="color: ${expectedColor};"]`]: 1 });

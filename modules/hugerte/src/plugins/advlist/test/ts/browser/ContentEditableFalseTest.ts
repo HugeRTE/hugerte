@@ -71,8 +71,8 @@ ${listContent}
   ];
 
   const checkToolbarDisabled = (editor: Editor, listType: string) => {
-    UiFinder.exists(SugarBody.body(), `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
-    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"] > .tox-tbtn`);
+    UiFinder.exists(SugarBody.body(), `[aria-label="${listType}"][aria-disabled="true"].tox-split-button__main`);
+    TinyUiActions.clickOnToolbar(editor, `[aria-label="${listType}"][aria-disabled="true"].tox-split-button__main`);
   };
 
   const performActionAndAssertNoChange = (list: ListParameters, action: (editor: Editor) => any) => {

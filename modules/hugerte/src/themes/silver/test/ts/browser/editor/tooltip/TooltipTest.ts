@@ -128,14 +128,14 @@ describe('browser.hugerte.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addSplitButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"]';
+        const buttonSelector = 'button[data-mce-name="split-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - forecolor`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="forecolor"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = '[data-mce-name="forecolor-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         await Waiter.pWait(300);
         const menuSelector = 'div[data-mce-name="Red"]';
@@ -148,7 +148,7 @@ describe('browser.hugerte.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - listpreview`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button-with-icon"]  > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = '[data-mce-name="split-button-with-icon-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         const menuSelector = 'div[aria-label="Lower Alpha 1"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Lower Alpha 1');
@@ -643,7 +643,7 @@ describe('browser.hugerte.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should not show tooltip with ${test.label} - Contains text and no icon`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = '[data-mce-name="split-button-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         const menuSelector = '[aria-label="Choice item 1"]';
         await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), '');

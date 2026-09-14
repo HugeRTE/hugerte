@@ -36,52 +36,50 @@ describe('browser.hugerte.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
   const clickListBtn = (editor: Editor, type: ListType, isSplitBtn: boolean) => {
     const title = `${type === 'number' ? 'Numbered' : 'Bullet'} list`;
-    if (isSplitBtn) {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${title}"] > .tox-tbtn`);
-    } else {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${title}"]`);
-    }
+    const selector = isSplitBtn ? `[data-mce-name="${type === 'number' ? 'numlist' : 'bullist'}"]` : `[aria-label="${title}"]`;
+    TinyUiActions.clickOnToolbar(editor, selector);
   };
 
   const pAssertListBtnStructures = async (splitBtns: SplitBtns) => {
     const toolbarGroup = UiFinder.findIn(SugarBody.body(), '.tox-editor-header .tox-toolbar .tox-toolbar__group').getOrDie();
     await Waiter.pTryUntil('Wait for toolbar', () => Assertions.assertStructure(
       'Check lists toolbar button structures',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-toolbar__group') ],
-        children: [
-          s.element(splitBtns.number ? 'div' : 'button', {
-            classes: splitBtns.number ?
-              [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
-              [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
-            attrs: {
-              'data-mce-name': str.is('numlist'),
-            }
-          }),
-          s.element(splitBtns.bullet ? 'div' : 'button', {
-            classes: splitBtns.bullet ?
-              [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
-              [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
-            attrs: {
-              'data-mce-name': str.is('bullist'),
-            }
-          })
-        ]
-      })),
+      ApproxStructure.build((s, str, arr) => {
+        const listButton = (name: string, isSplit: boolean) => s.element('button', {
+          classes: isSplit ?
+            [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ] :
+            [ arr.has('tox-tbtn'), arr.not('tox-split-button__main') ],
+          attrs: {
+            'data-mce-name': str.is(name)
+          }
+        });
+        const listChevron = (name: string) => s.element('button', {
+          classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+          attrs: {
+            'data-mce-name': str.is(name + '-chevron')
+          }
+        });
+        return s.element('div', {
+          classes: [ arr.has('tox-toolbar__group') ],
+          children: [
+            listButton('numlist', splitBtns.number),
+            ...(splitBtns.number ? [ listChevron('numlist') ] : []),
+            listButton('bullist', splitBtns.bullet),
+            ...(splitBtns.bullet ? [ listChevron('bullist') ] : [])
+          ]
+        });
+      }),
       toolbarGroup
     ));
   };
 
   const pAssertButtonToggledState = (name: string, state: boolean) =>
     Waiter.pTryUntil('Wait for toolbar button state', () => {
-      const button = UiFinder.findIn(SugarBody.body(), `div.tox-split-button[aria-label="${name}"]`).getOrDie();
-      return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
-        children: [
-          s.element('span', {
-            exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
-          }),
-          s.theRest()
-        ]
+      const button = UiFinder.findIn(SugarBody.body(), `button.tox-split-button__main[aria-label="${name}"]`).getOrDie();
+      return Assertions.assertStructure('', ApproxStructure.build((s, _, arr) => s.element('button', {
+        classes: state ?
+          [ arr.has('tox-tbtn'), arr.has('tox-tbtn--enabled') ] :
+          [ arr.has('tox-tbtn'), arr.not('tox-tbtn--enabled') ]
       })), button);
     });
 
@@ -317,14 +315,11 @@ describe('browser.hugerte.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
     const pAssertButtonToggledState = (name: string, state: boolean) =>
       Waiter.pTryUntil('Wait for context toolbar button state', () => {
-        const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog .tox-split-button[aria-label="${name}"]`).getOrDie();
-        return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
-          children: [
-            s.element('span', {
-              exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
-            }),
-            s.theRest()
-          ]
+        const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog button.tox-split-button__main[aria-label="${name}"]`).getOrDie();
+        return Assertions.assertStructure('', ApproxStructure.build((s, _, arr) => s.element('button', {
+          classes: state ?
+            [ arr.has('tox-tbtn'), arr.has('tox-tbtn--enabled') ] :
+            [ arr.has('tox-tbtn'), arr.not('tox-tbtn--enabled') ]
         })), button);
       });
 
