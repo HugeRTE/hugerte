@@ -8,6 +8,7 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'hugerte/core/api/Editor';
 import { Menu } from 'hugerte/core/api/ui/Ui';
 import LocalStorage from 'hugerte/core/api/util/LocalStorage';
+import * as ColorCache from 'hugerte/themes/silver/ui/core/color/ColorCache';
 
 describe('browser.hugerte.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestStore();
@@ -140,6 +141,7 @@ describe('browser.hugerte.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   beforeEach(() => {
     LocalStorage.clear();
+    ColorCache.clearStoredCaches();
   });
 
   it('Check structure of color swatch', async () => {
